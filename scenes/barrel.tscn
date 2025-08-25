@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cge8y1v4562sd"]
+
+[ext_resource type="Texture2D" uid="uid://b3wvg6grjousj" path="res://assets/Hana Caraka - Topdown Tileset [sample]/Props/Other.png" id="1_q36op"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_q36op"]
+
+[node name="Barrel" type="AnimatableBody2D" groups=["Pickable"]]
+
+[node name="Other" type="Sprite2D" parent="." groups=["Pickable"]]
+position = Vector2(0, -4)
+scale = Vector2(2, 2)
+texture = ExtResource("1_q36op")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_q36op")

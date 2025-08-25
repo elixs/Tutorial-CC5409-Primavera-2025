@@ -13,10 +13,20 @@ signal dot_spawn_requested
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var playback: AnimationNodeStateMachinePlayback = animation_tree["parameters/movement/playback"]
 @onready var bullet_spawner: MultiplayerSpawner = $BulletSpawner
+@onready var sword: Node2D = $Sword
+@onready var camera_2d: Camera2D = $Camera2D
+@onready var pickable_area_2d: Area2D = $PickableArea2D
+@onready var pickable_marker_2d: Marker2D = $PickableMarker2D
+
+var picked_node = null
+var pickable: Node2D
+
 
 func _ready() -> void:
+	
 	if bullet_scene:
 		bullet_spawner.add_spawnable_scene(bullet_scene.resource_path)
+
 
 func _physics_process(delta: float) -> void:
 
@@ -27,18 +37,27 @@ func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
 		if Input.is_action_just_pressed("range") and not animation_tree["parameters/range/active"]:
 			fire_server.rpc_id(1, get_global_mouse_position())
-	
-	
-	
+		if Input.is_action_just_pressed("melee"):
+			swing.rpc()
+		sword.rotation = global_position.direction_to(get_global_mouse_position()).angle()
+		if Input.is_action_just_pressed("pick"):
+			if picked_node:
+				drop.rpc()
+			else:
+				if pickable:
+					pick.rpc(pickable.get_path())
+					
+	if picked_node:
+		sword.global_position = lerp(sword.global_position, pickable_marker_2d.global_position, 0.01) 
 	if move_input or velocity.length_squared() > 100:
 		playback.travel("run")
 	else:
 		playback.travel("idle")
 	
-	if is_multiplayer_authority():
-		if Input.is_action_just_pressed("click"):
-			dot_spawn_requested.emit(get_global_mouse_position())
-
+	#if is_multiplayer_authority():
+		#if Input.is_action_just_pressed("click"):
+			#dot_spawn_requested.emit(get_global_mouse_position())
+		
 
 func setup(player_data: Statics.PlayerData):
 	label.text = player_data.name
@@ -46,6 +65,11 @@ func setup(player_data: Statics.PlayerData):
 	set_multiplayer_authority(player_data.id, false)
 	multiplayer_synchronizer.set_multiplayer_authority(player_data.id, false)
 	input_synchronizer.set_multiplayer_authority(player_data.id, false)
+	sword.setup(player_data)
+	camera_2d.enabled = is_multiplayer_authority()
+	if is_multiplayer_authority():
+		pickable_area_2d.body_entered.connect(_on_pickable_body_entered)
+		pickable_area_2d.body_exited.connect(_on_pickable_body_exited)
 
 
 @rpc("any_peer", "call_local", "reliable")
@@ -78,3 +102,35 @@ func fire_server(pos):
 @rpc("any_peer", "call_local", "reliable")
 func fire_anim():
 	animation_tree["parameters/range/request"] = AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
+
+@rpc("authority", "call_local", "reliable")
+func swing():
+	sword.swing()
+
+func _on_pickable_body_entered(body: Node2D):
+	if picked_node:
+		return
+	if body.is_in_group("Pickable"):
+		pickable = body
+
+
+func _on_pickable_body_exited(body: Node2D):
+	if pickable == body:
+		pickable = null
+
+@rpc("authority", "call_local", "reliable")
+func pick(node_path):
+	var node = get_tree().root.get_node(node_path)
+	node.get_parent().remove_child(node)
+	pickable_marker_2d.add_child(node)
+	node.position = Vector2.ZERO
+	picked_node = node
+
+
+@rpc("authority", "call_local", "reliable")
+func drop():
+	var node = pickable_marker_2d.get_child(0)
+	node.get_parent().remove_child(node)
+	node.global_position = pickable_marker_2d.global_position
+	get_parent().add_child(node)
+	picked_node = null

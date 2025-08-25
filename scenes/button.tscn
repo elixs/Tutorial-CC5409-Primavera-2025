@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://d24mpsfdnw260"]
+
+[ext_resource type="Texture2D" uid="uid://drs0g56pvhgi5" path="res://assets/Hana Caraka - Topdown Tileset [sample]/Props/Tree.png" id="1_mi6dp"]
+[ext_resource type="Script" uid="uid://c5wq0je4jnycv" path="res://scenes/button.gd" id="1_rhj8v"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rhj8v"]
+radius = 26.9258
+
+[sub_resource type="LabelSettings" id="LabelSettings_rhj8v"]
+font_size = 20
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Button" type="Node2D"]
+script = ExtResource("1_rhj8v")
+
+[node name="Tree" type="Sprite2D" parent="."]
+position = Vector2(0, -17)
+texture = ExtResource("1_mi6dp")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 48)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_rhj8v")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -31.0
+offset_top = -45.0
+offset_right = 38.0
+offset_bottom = -17.0
+text = "press e"
+label_settings = SubResource("LabelSettings_rhj8v")
+horizontal_alignment = 1

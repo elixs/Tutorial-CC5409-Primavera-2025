@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://df84bjfdlp4lx"]
+[gd_scene load_steps=24 format=3 uid="uid://df84bjfdlp4lx"]
 
 [ext_resource type="Script" uid="uid://c3g0gk37yr2r2" path="res://scenes/player.gd" id="2_g2els"]
 [ext_resource type="PackedScene" uid="uid://c8ddyqqaq6lm" path="res://scenes/bullet.tscn" id="2_smehm"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b6lqxpogdeq8e" path="res://assets/Hana Caraka - Base Character [sample]/death.png" id="6_fjrip"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://b21vc551xwe86" path="res://resources/movement.tres" id="7_smehm"]
 [ext_resource type="Script" uid="uid://6yht3jk70p8w" path="res://components/hurtbox.gd" id="8_smehm"]
+[ext_resource type="PackedScene" uid="uid://de6vap0mvx1dp" path="res://scenes/sword.tscn" id="9_ur7pv"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_smehm"]
 font_size = 20
@@ -125,6 +126,10 @@ tracks/3/keys = {
 "values": [3]
 }
 
+[sub_resource type="Animation" id="Animation_y4r1p"]
+resource_name = "melee"
+step = 0.1
+
 [sub_resource type="Animation" id="Animation_ur7pv"]
 resource_name = "range"
 length = 0.4
@@ -236,6 +241,7 @@ tracks/3/keys = {
 _data = {
 &"RESET": SubResource("Animation_qlg0r"),
 &"idle": SubResource("Animation_dqkch"),
+&"melee": SubResource("Animation_y4r1p"),
 &"range": SubResource("Animation_ur7pv"),
 &"run": SubResource("Animation_fjrip")
 }
@@ -246,7 +252,6 @@ animation = &"range"
 [sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_d2wvv"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_3v2ag"]
-graph_offset = Vector2(-347.806, 213.859)
 "nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_y4r1p")
 "nodes/Animation 2/position" = Vector2(-146.667, 373.333)
 nodes/movement/node = ExtResource("7_smehm")
@@ -258,6 +263,9 @@ node_connections = [&"output", 0, &"range", &"range", 0, &"movement", &"range", 
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_smehm"]
 radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ur7pv"]
+radius = 23.0217
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -313,3 +321,18 @@ shape = SubResource("CircleShape2D_smehm")
 
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")
+
+[node name="Sword" parent="." instance=ExtResource("9_ur7pv")]
+position = Vector2(128, -124)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
+
+[node name="PickableArea2D" type="Area2D" parent="."]
+position = Vector2(23, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickableArea2D"]
+shape = SubResource("CircleShape2D_ur7pv")
+
+[node name="PickableMarker2D" type="Marker2D" parent="."]
+position = Vector2(37, -6)
