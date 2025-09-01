@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjv1bekmdpf7j"]
+
+[ext_resource type="Script" uid="uid://ily8jkjprqy3" path="res://ui/hud.gd" id="1_rbyyf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pv4sj"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rbyyf"]
+bg_color = Color(0.524808, 0.745192, 0.104093, 1)
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_rbyyf")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 208.0
+offset_bottom = 48.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_pv4sj")
+theme_override_styles/fill = SubResource("StyleBoxFlat_rbyyf")
+show_percentage = false

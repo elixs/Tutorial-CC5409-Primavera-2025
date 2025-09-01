@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://2ngtor8lgiln"]
+
+[ext_resource type="Script" uid="uid://h7n47dk5gtpj" path="res://scenes/enemy_following.gd" id="1_bjtqm"]
+[ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="2_a4lw7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bjtqm"]
+radius = 5.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bjtqm"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="EnemyFollowing" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_bjtqm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -11)
+scale = Vector2(0.1, 0.2)
+texture = ExtResource("2_a4lw7")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Sprite2D"]
+position = Vector2(0, -70)
+scale = Vector2(1.36513, 0.228783)
+texture = ExtResource("2_a4lw7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("CircleShape2D_bjtqm")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+target_desired_distance = 50.0
+debug_enabled = true
+
+[node name="PathUpdateTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="."]
+position = Vector2(0, -2)
+radius = 10.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_bjtqm")

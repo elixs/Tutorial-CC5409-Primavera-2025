@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://df84bjfdlp4lx"]
+[gd_scene load_steps=26 format=3 uid="uid://df84bjfdlp4lx"]
 
 [ext_resource type="Script" uid="uid://c3g0gk37yr2r2" path="res://scenes/player.gd" id="2_g2els"]
 [ext_resource type="PackedScene" uid="uid://c8ddyqqaq6lm" path="res://scenes/bullet.tscn" id="2_smehm"]
@@ -9,6 +9,8 @@
 [ext_resource type="AnimationNodeStateMachine" uid="uid://b21vc551xwe86" path="res://resources/movement.tres" id="7_smehm"]
 [ext_resource type="Script" uid="uid://6yht3jk70p8w" path="res://components/hurtbox.gd" id="8_smehm"]
 [ext_resource type="PackedScene" uid="uid://de6vap0mvx1dp" path="res://scenes/sword.tscn" id="9_ur7pv"]
+[ext_resource type="PackedScene" uid="uid://cjv1bekmdpf7j" path="res://ui/hud.tscn" id="10_y4r1p"]
+[ext_resource type="Script" uid="uid://dbw87rpo5o3s6" path="res://components/health_component.gd" id="11_d2wvv"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_smehm"]
 font_size = 20
@@ -268,11 +270,12 @@ radius = 12.0
 radius = 23.0217
 
 [node name="Player" type="CharacterBody2D"]
-collision_layer = 2
-collision_mask = 0
+y_sort_enabled = true
+collision_layer = 3
 motion_mode = 1
 script = ExtResource("2_g2els")
 bullet_scene = ExtResource("2_smehm")
+metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="."]
 offset_left = -173.0
@@ -284,13 +287,14 @@ label_settings = SubResource("LabelSettings_smehm")
 horizontal_alignment = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -8)
 scale = Vector2(2, 2)
 texture = ExtResource("5_qlg0r")
+offset = Vector2(0, -6)
 hframes = 4
 vframes = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_g2els")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
@@ -317,16 +321,16 @@ script = ExtResource("8_smehm")
 metadata/_custom_type_script = "uid://6yht3jk70p8w"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_smehm")
 
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")
 
 [node name="Sword" parent="." instance=ExtResource("9_ur7pv")]
-position = Vector2(128, -124)
+position = Vector2(56, 6)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
 
 [node name="PickableArea2D" type="Area2D" parent="."]
 position = Vector2(23, 0)
@@ -336,3 +340,9 @@ shape = SubResource("CircleShape2D_ur7pv")
 
 [node name="PickableMarker2D" type="Marker2D" parent="."]
 position = Vector2(37, -6)
+
+[node name="HUD" parent="." instance=ExtResource("10_y4r1p")]
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("11_d2wvv")
+metadata/_custom_type_script = "uid://dbw87rpo5o3s6"

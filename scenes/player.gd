@@ -17,6 +17,11 @@ signal dot_spawn_requested
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var pickable_area_2d: Area2D = $PickableArea2D
 @onready var pickable_marker_2d: Marker2D = $PickableMarker2D
+@onready var health_component: HealthComponent = $HealthComponent
+@onready var hud: HUD = $HUD
+
+
+
 
 var picked_node = null
 var pickable: Node2D
@@ -26,7 +31,8 @@ func _ready() -> void:
 	
 	if bullet_scene:
 		bullet_spawner.add_spawnable_scene(bullet_scene.resource_path)
-
+	
+	hud.setup(health_component)
 
 func _physics_process(delta: float) -> void:
 
@@ -46,6 +52,8 @@ func _physics_process(delta: float) -> void:
 			else:
 				if pickable:
 					pick.rpc(pickable.get_path())
+		if Input.is_action_just_pressed("test"):
+			health_component.health -= 10
 					
 	if picked_node:
 		sword.global_position = lerp(sword.global_position, pickable_marker_2d.global_position, 0.01) 
@@ -67,6 +75,7 @@ func setup(player_data: Statics.PlayerData):
 	input_synchronizer.set_multiplayer_authority(player_data.id, false)
 	sword.setup(player_data)
 	camera_2d.enabled = is_multiplayer_authority()
+	hud.visible = is_multiplayer_authority()
 	if is_multiplayer_authority():
 		pickable_area_2d.body_entered.connect(_on_pickable_body_entered)
 		pickable_area_2d.body_exited.connect(_on_pickable_body_exited)

@@ -15,6 +15,7 @@ func _ready() -> void:
 		player_inst.global_position = markers.get_child(i).global_position
 		player_inst.setup(player_data)
 		player_inst.dot_spawn_requested.connect(_on_dot_spawn)
+		player_data.scene = player_inst
 	await get_tree().create_timer(5).timeout
 	Debug.log(get_tree().get_nodes_in_group("player").size())
 
