@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://c66fl8u5udhcf"]
+
+[ext_resource type="Script" uid="uid://jubnuca8dn17" path="res://ui/pause_menu.gd" id="1_50142"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_euhrg"]
+bg_color = Color(0, 0, 0, 0.105882354)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.22233534, 0.44800758, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_50142"]
+bg_color = Color(0.22352941, 0.44705883, 1, 1)
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_50142")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_euhrg")
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_50142")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Pauser" type="Label" parent="PanelContainer/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Jugador"

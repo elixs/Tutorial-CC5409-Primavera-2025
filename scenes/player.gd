@@ -7,20 +7,20 @@ signal dot_spawn_requested
 @export var acceleration: int = 400
 @export var bullet_scene: PackedScene
 
+
 @onready var label: Label = $Label
 @onready var multiplayer_synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @onready var input_synchronizer: InputSynchronizer = $InputSynchronizer
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var playback: AnimationNodeStateMachinePlayback = animation_tree["parameters/movement/playback"]
 @onready var bullet_spawner: MultiplayerSpawner = $BulletSpawner
-@onready var sword: Node2D = $Sword
+@onready var weapon_pivot: Node2D = $WeaponPivot
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var pickable_area_2d: Area2D = $PickableArea2D
 @onready var pickable_marker_2d: Marker2D = $PickableMarker2D
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var hud: HUD = $HUD
-
-
+@onready var health_bar: ProgressBar = %HealthBar
 
 
 var picked_node = null
@@ -33,6 +33,10 @@ func _ready() -> void:
 		bullet_spawner.add_spawnable_scene(bullet_scene.resource_path)
 	
 	hud.setup(health_component)
+	health_bar.value = health_component.health
+	health_bar.max_value = health_component.max_health
+	health_component.health_changed.connect(func(value): health_bar.value = value)
+
 
 func _physics_process(delta: float) -> void:
 
@@ -44,8 +48,8 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("range") and not animation_tree["parameters/range/active"]:
 			fire_server.rpc_id(1, get_global_mouse_position())
 		if Input.is_action_just_pressed("melee"):
-			swing.rpc()
-		sword.rotation = global_position.direction_to(get_global_mouse_position()).angle()
+			melee()
+		weapon_pivot.rotation = global_position.direction_to(get_global_mouse_position()).angle()
 		if Input.is_action_just_pressed("pick"):
 			if picked_node:
 				drop.rpc()
@@ -55,8 +59,6 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("test"):
 			health_component.health -= 10
 					
-	if picked_node:
-		sword.global_position = lerp(sword.global_position, pickable_marker_2d.global_position, 0.01) 
 	if move_input or velocity.length_squared() > 100:
 		playback.travel("run")
 	else:
@@ -73,13 +75,13 @@ func setup(player_data: Statics.PlayerData):
 	set_multiplayer_authority(player_data.id, false)
 	multiplayer_synchronizer.set_multiplayer_authority(player_data.id, false)
 	input_synchronizer.set_multiplayer_authority(player_data.id, false)
-	sword.setup(player_data)
 	camera_2d.enabled = is_multiplayer_authority()
 	hud.visible = is_multiplayer_authority()
 	if is_multiplayer_authority():
 		pickable_area_2d.body_entered.connect(_on_pickable_body_entered)
 		pickable_area_2d.body_exited.connect(_on_pickable_body_exited)
-
+	health_bar.visible = not is_multiplayer_authority()
+	health_component.set_multiplayer_authority(player_data.id)
 
 @rpc("any_peer", "call_local", "reliable")
 func test():
@@ -112,10 +114,6 @@ func fire_server(pos):
 func fire_anim():
 	animation_tree["parameters/range/request"] = AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
 
-@rpc("authority", "call_local", "reliable")
-func swing():
-	sword.swing()
-
 func _on_pickable_body_entered(body: Node2D):
 	if picked_node:
 		return
@@ -143,3 +141,6 @@ func drop():
 	node.global_position = pickable_marker_2d.global_position
 	get_parent().add_child(node)
 	picked_node = null
+
+func melee() -> void:
+	pass

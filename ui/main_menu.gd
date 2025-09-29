@@ -7,12 +7,12 @@ extends Control
 @onready var credits: Button = %Credits
 @onready var quit: Button = %Quit
 
+func _enter_tree() -> void:
+	if Game.multiplayer_test:
+		get_tree().change_scene_to_file.call_deferred("res://lobby/lobby_test.tscn")
+
 
 func _ready() -> void:
-	if Game.multiplayer_test:
-		get_tree().change_scene_to_file("res://lobby/lobby_test.tscn")
-		return
-	
 	quit.pressed.connect(func(): get_tree().quit())
 	host.pressed.connect(func(): get_tree().change_scene_to_file("res://lobby/host_screen.tscn"))
 	join.pressed.connect(func(): get_tree().change_scene_to_file("res://lobby/join_screen.tscn"))

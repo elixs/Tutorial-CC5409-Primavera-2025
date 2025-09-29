@@ -1,6 +1,8 @@
 class_name Hurtbox
 extends Area2D
 
+@export var health_component: HealthComponent
+
 
 func _ready() -> void:
 	if is_multiplayer_authority():
@@ -12,6 +14,9 @@ func _on_area_entered(area: Area2D):
 	if hitbox:
 		if hitbox.should_ignore(self):
 			return
-		if owner.has_method("take_damage"):
-			owner.take_damage(hitbox.damage)
+		if health_component:
+			health_component.set_health(health_component.health - hitbox.damage)
+			#health_component.health -= hitbox.damage
 			hitbox.damage_dealt.emit()
+		#if owner.has_method("take_damage"):
+			#owner.take_damage(hitbox.damage)

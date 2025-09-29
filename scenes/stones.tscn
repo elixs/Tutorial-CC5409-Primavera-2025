@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://2ym70qlo3qxu"]
+
+[ext_resource type="Texture2D" uid="uid://6u38dom5umcc" path="res://assets/Hana Caraka - Topdown Tileset [sample]/Props/Stone and Rock.png" id="1_gv6ye"]
+[ext_resource type="Script" uid="uid://bms2suq061atj" path="res://components/hitbox.gd" id="2_8oig3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_el0po"]
+size = Vector2(30, 28)
+
+[node name="Stones" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_gv6ye")
+region_enabled = true
+region_rect = Rect2(64, 0, 32, 32)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("2_8oig3")
+metadata/_custom_type_script = "uid://bms2suq061atj"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_el0po")

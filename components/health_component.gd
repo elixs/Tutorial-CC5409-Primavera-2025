@@ -1,5 +1,5 @@
 class_name HealthComponent
-extends Node
+extends MultiplayerSynchronizer
 
 signal health_changed(value)
 
@@ -8,3 +8,12 @@ signal health_changed(value)
 		health = value
 		health_changed.emit(health)
 @export var max_health  = 100
+
+
+func set_health(value):
+	set_health_authority.rpc_id(get_multiplayer_authority(), value)
+
+
+@rpc("any_peer", "call_local", "reliable")
+func set_health_authority(value):
+	health = value

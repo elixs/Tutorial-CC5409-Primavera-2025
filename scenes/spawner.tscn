@@ -7,4 +7,3 @@ spawn_path = NodePath(".")
 script = ExtResource("1_2vbf6")
 
 [node name="Timer" type="Timer" parent="."]
-autostart = true

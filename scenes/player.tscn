@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://df84bjfdlp4lx"]
+[gd_scene load_steps=27 format=3 uid="uid://df84bjfdlp4lx"]
 
 [ext_resource type="Script" uid="uid://c3g0gk37yr2r2" path="res://scenes/player.gd" id="2_g2els"]
 [ext_resource type="PackedScene" uid="uid://c8ddyqqaq6lm" path="res://scenes/bullet.tscn" id="2_smehm"]
@@ -8,9 +8,14 @@
 [ext_resource type="Texture2D" uid="uid://b6lqxpogdeq8e" path="res://assets/Hana Caraka - Base Character [sample]/death.png" id="6_fjrip"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://b21vc551xwe86" path="res://resources/movement.tres" id="7_smehm"]
 [ext_resource type="Script" uid="uid://6yht3jk70p8w" path="res://components/hurtbox.gd" id="8_smehm"]
-[ext_resource type="PackedScene" uid="uid://de6vap0mvx1dp" path="res://scenes/sword.tscn" id="9_ur7pv"]
 [ext_resource type="PackedScene" uid="uid://cjv1bekmdpf7j" path="res://ui/hud.tscn" id="10_y4r1p"]
-[ext_resource type="Script" uid="uid://dbw87rpo5o3s6" path="res://components/health_component.gd" id="11_d2wvv"]
+[ext_resource type="PackedScene" uid="uid://sqqc1otkijsx" path="res://components/health_component.tscn" id="11_d2wvv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2wvv"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3v2ag"]
+bg_color = Color(0.524808, 0.745192, 0.104093, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_smehm"]
 font_size = 20
@@ -22,6 +27,9 @@ radius = 6.32456
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("WeaponPivot:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [sub_resource type="Animation" id="Animation_qlg0r"]
 length = 0.001
@@ -254,11 +262,11 @@ animation = &"range"
 [sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_d2wvv"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_3v2ag"]
+nodes/output/position = Vector2(333.333, 146.667)
 "nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_y4r1p")
 "nodes/Animation 2/position" = Vector2(-146.667, 373.333)
 nodes/movement/node = ExtResource("7_smehm")
 nodes/movement/position = Vector2(-280, 146.667)
-nodes/output/position = Vector2(333.333, 146.667)
 nodes/range/node = SubResource("AnimationNodeOneShot_d2wvv")
 nodes/range/position = Vector2(95.2888, 196.874)
 node_connections = [&"output", 0, &"range", &"range", 0, &"movement", &"range", 1, &"Animation 2"]
@@ -277,11 +285,25 @@ script = ExtResource("2_g2els")
 bullet_scene = ExtResource("2_smehm")
 metadata/_edit_lock_ = true
 
+[node name="HealthBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(60, 10)
+offset_left = -30.0
+offset_top = -39.0
+offset_right = 30.0
+offset_bottom = -29.0
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_d2wvv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_3v2ag")
+show_percentage = false
+
 [node name="Label" type="Label" parent="."]
+z_index = 1
 offset_left = -173.0
-offset_top = -54.0
+offset_top = -65.0
 offset_right = 175.0
-offset_bottom = -26.0
+offset_bottom = -37.0
 text = "asdads"
 label_settings = SubResource("LabelSettings_smehm")
 horizontal_alignment = 1
@@ -314,10 +336,11 @@ parameters/range/active = false
 parameters/range/internal_active = false
 parameters/range/request = 0
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("8_smehm")
+health_component = NodePath("../HealthComponent")
 metadata/_custom_type_script = "uid://6yht3jk70p8w"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
@@ -326,9 +349,6 @@ shape = SubResource("CircleShape2D_smehm")
 
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")
-
-[node name="Sword" parent="." instance=ExtResource("9_ur7pv")]
-position = Vector2(56, 6)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
@@ -343,6 +363,6 @@ position = Vector2(37, -6)
 
 [node name="HUD" parent="." instance=ExtResource("10_y4r1p")]
 
-[node name="HealthComponent" type="Node" parent="."]
-script = ExtResource("11_d2wvv")
-metadata/_custom_type_script = "uid://dbw87rpo5o3s6"
+[node name="WeaponPivot" type="Node2D" parent="."]
+
+[node name="HealthComponent" parent="." instance=ExtResource("11_d2wvv")]

@@ -21,7 +21,7 @@ static func get_role_name(role: Role) -> String:
 		Role.ROLE_A:
 			return "Role A"
 		Role.ROLE_B:
-			return "Role B"
+			return "Knight"
 		Role.ROLE_C:
 			return "Role C"
 	return "Unknown"
