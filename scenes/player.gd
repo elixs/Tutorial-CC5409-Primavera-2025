@@ -1,8 +1,6 @@
 class_name Player
 extends CharacterBody2D
 
-signal dot_spawn_requested
-
 @export var max_speed: int = 100
 @export var acceleration: int = 400
 @export var bullet_scene: PackedScene

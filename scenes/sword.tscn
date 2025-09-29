@@ -25,7 +25,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hitbox/CollisionShape2D:disabled")
+tracks/1/path = NodePath("Pivot/Hitbox/CollisionShape2D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -54,7 +54,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Hitbox/CollisionShape2D:disabled")
+tracks/1/path = NodePath("Pivot/Hitbox/CollisionShape2D:disabled")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -78,22 +78,24 @@ properties/0/replication_mode = 1
 [node name="Sword" type="Node2D"]
 script = ExtResource("1_s4ec8")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Pivot" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Pivot"]
 position = Vector2(25, 0)
 scale = Vector2(0.5625, 0.046875)
 texture = ExtResource("2_k5whp")
 
-[node name="Sprite2D2" type="Sprite2D" parent="."]
+[node name="Sprite2D2" type="Sprite2D" parent="Pivot"]
 scale = Vector2(0.0625, 0.203125)
 texture = ExtResource("2_k5whp")
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="Pivot"]
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("3_1yp6w")
 metadata/_custom_type_script = "uid://bms2suq061atj"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pivot/Hitbox"]
 position = Vector2(33, 0)
 rotation = -1.5708
 shape = SubResource("CapsuleShape2D_dwvek")

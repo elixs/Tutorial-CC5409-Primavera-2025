@@ -22,13 +22,9 @@ func _ready() -> void:
 		players.add_child(player_inst)
 		player_inst.global_position = markers.get_child(i).global_position
 		player_inst.setup(player_data)
-		player_inst.dot_spawn_requested.connect(_on_dot_spawn)
 		player_data.scene = player_inst
 	await get_tree().create_timer(5).timeout
 	Debug.log(get_tree().get_nodes_in_group("player").size())
-
-func _on_dot_spawn(pos):
-	spawn_dot.rpc_id(1, pos)
 	
 @rpc("any_peer", "call_local", "reliable")
 func spawn_dot(pos):

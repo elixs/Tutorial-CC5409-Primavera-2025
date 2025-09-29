@@ -10,7 +10,7 @@ func _ready() -> void:
 	if is_multiplayer_authority():
 		path_update_timer.timeout.connect(update_target)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if navigation_agent_2d.is_navigation_finished():
 		return
 
