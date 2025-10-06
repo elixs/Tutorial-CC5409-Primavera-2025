@@ -4,8 +4,8 @@ extends Node2D
 @export var dot_scene: PackedScene
 @export var knight_scene: PackedScene
 
-@onready var players: Node2D = $Players
-@onready var markers: Node2D = $Markers
+@onready var players: Node2D = %Players
+@onready var markers: Node2D = %Markers
 
 
 func _ready() -> void:

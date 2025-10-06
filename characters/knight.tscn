@@ -15,5 +15,5 @@ modulate = Color(0.7622117, 0.40435326, 1.92523e-07, 1)
 [node name="Sword" parent="WeaponPivot" index="0" instance=ExtResource("3_3ygcs")]
 position = Vector2(50, 0)
 
-[node name="SwingPlayer" type="AudioStreamPlayer2D" parent="." index="16"]
-stream = ExtResource("3_sf0gi")
+[node name="MeleeCooldown" parent="." index="16"]
+wait_time = 0.5

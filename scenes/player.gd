@@ -19,6 +19,7 @@ extends CharacterBody2D
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var hud: HUD = $HUD
 @onready var health_bar: ProgressBar = %HealthBar
+@onready var melee_cooldown: Timer = $MeleeCooldown
 
 
 var picked_node = null
@@ -35,7 +36,6 @@ func _ready() -> void:
 	health_bar.max_value = health_component.max_health
 	health_component.health_changed.connect(func(value): health_bar.value = value)
 
-
 func _physics_process(delta: float) -> void:
 
 	var move_input = input_synchronizer.move_input
@@ -45,7 +45,7 @@ func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
 		if Input.is_action_just_pressed("range") and not animation_tree["parameters/range/active"]:
 			fire_server.rpc_id(1, get_global_mouse_position())
-		if Input.is_action_just_pressed("melee"):
+		if Input.is_action_just_pressed("melee") and melee_cooldown.is_stopped():
 			melee()
 		weapon_pivot.rotation = global_position.direction_to(get_global_mouse_position()).angle()
 		if Input.is_action_just_pressed("pick"):
@@ -141,4 +141,9 @@ func drop():
 	picked_node = null
 
 func melee() -> void:
-	pass
+	melee_cooldown.start()
+
+func heal(value: int) -> void:
+	if not multiplayer.is_server():
+		return
+	health_component.health += value

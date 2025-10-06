@@ -2,10 +2,13 @@ extends MultiplayerSpawner
 
 @export var scene: PackedScene
 @export var spawn_maker: Marker2D
+@export var enabled: bool = true
 
 @onready var timer: Timer = $Timer
 
 func _ready() -> void:
+	if not enabled:
+		return
 	if scene:
 		add_spawnable_scene(scene.resource_path)
 	if is_multiplayer_authority():

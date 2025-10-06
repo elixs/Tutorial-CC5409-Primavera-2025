@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://de6vap0mvx1dp"]
+[gd_scene load_steps=10 format=3 uid="uid://de6vap0mvx1dp"]
 
 [ext_resource type="Script" uid="uid://13dbnv1bxlwj" path="res://scenes/sword.gd" id="1_s4ec8"]
 [ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="2_k5whp"]
 [ext_resource type="Script" uid="uid://bms2suq061atj" path="res://components/hitbox.gd" id="3_1yp6w"]
+[ext_resource type="AudioStream" uid="uid://bj3ntyv6xk2d" path="res://assets/sounds/golf-swing-practice-01-255625.mp3" id="4_k5whp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dwvek"]
 radius = 6.0
@@ -108,3 +109,7 @@ libraries = {
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_s4ec8")
+
+[node name="SwingAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_k5whp")
+bus = &"SFX"

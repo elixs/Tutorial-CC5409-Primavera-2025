@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://dk367c4f4l8jv"]
+
+[ext_resource type="Texture2D" uid="uid://dwl2nhecfswaf" path="res://assets/Hana Caraka - Farming n Foraging [sample]/crops/radish.png" id="1_86ypi"]
+[ext_resource type="Script" uid="uid://batqybifqhvji" path="res://scripts/items/item_potion.gd" id="2_86ypi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2a6ly"]
+atlas = ExtResource("1_86ypi")
+region = Rect2(16, 16, 16, 16)
+
+[resource]
+script = ExtResource("2_86ypi")
+health = 20
+display_name = "Radish"
+description = "Recover 20 HP"
+image = SubResource("AtlasTexture_2a6ly")
+metadata/_custom_type_script = "uid://dtusjpnvhlurh"
