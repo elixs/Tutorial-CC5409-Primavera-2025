@@ -1,0 +1,173 @@
+[gd_scene load_steps=25 format=3 uid="uid://wh0j0l2dsgtt"]
+
+[ext_resource type="Script" uid="uid://t3vat2jlex3x" path="res://scenes/enemies/enemy_bt.gd" id="1_834aw"]
+[ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="1_qlppl"]
+[ext_resource type="Script" uid="uid://b5u70uj072ici" path="res://ai/tasks/abort_on_change.gd" id="3_qjpl8"]
+[ext_resource type="Script" uid="uid://ce52ptexcsymm" path="res://ai/tasks/in_range.gd" id="3_vahtq"]
+[ext_resource type="Script" uid="uid://bwonka5vkbwni" path="res://ai/tasks/move_to.gd" id="4_wmy3e"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_834aw"]
+radius = 5.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qjpl8"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="Animation" id="Animation_834aw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Body/Sprite2D/Sprite2D2:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.91694, 0.27064142)]
+}
+
+[sub_resource type="Animation" id="Animation_qlppl"]
+resource_name = "walk"
+length = 0.2
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(0.18946446, 3.138337, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -4), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qjpl8"]
+resource_name = "wink"
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/Sprite2D/Sprite2D2:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 0.105111964, 1),
+"update": 0,
+"values": [Vector2(0.91694, 0.27064142), Vector2(0.917, 0.136), Vector2(0.91694, 0.27064142)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vahtq"]
+_data = {
+&"RESET": SubResource("Animation_834aw"),
+&"walk": SubResource("Animation_qlppl"),
+&"wink": SubResource("Animation_qjpl8")
+}
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_qlppl"]
+
+[sub_resource type="BTCondition" id="BTCondition_wmy3e"]
+script = ExtResource("3_vahtq")
+
+[sub_resource type="BBNode" id="BBNode_vahtq"]
+saved_value = NodePath("AnimationPlayer")
+resource_name = "AnimationPlayer"
+
+[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_wmy3e"]
+animation_player = SubResource("BBNode_vahtq")
+animation_name = &"wink"
+
+[sub_resource type="BTSequence" id="BTSequence_vahtq"]
+children = [SubResource("BTCondition_wmy3e"), SubResource("BTPlayAnimation_wmy3e")]
+
+[sub_resource type="BBNode" id="BBNode_bijdr"]
+saved_value = NodePath("AnimationPlayer")
+resource_name = "AnimationPlayer"
+
+[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_atyoi"]
+animation_player = SubResource("BBNode_bijdr")
+animation_name = &"walk"
+
+[sub_resource type="BTAction" id="BTAction_bijdr"]
+script = ExtResource("4_wmy3e")
+
+[sub_resource type="BTSequence" id="BTSequence_hr1l7"]
+children = [SubResource("BTPlayAnimation_atyoi"), SubResource("BTAction_bijdr")]
+
+[sub_resource type="BTSelector" id="BTSelector_wmy3e"]
+children = [SubResource("BTSequence_vahtq"), SubResource("BTSequence_hr1l7")]
+
+[sub_resource type="BTDecorator" id="BTDecorator_bijdr"]
+children = [SubResource("BTSelector_wmy3e")]
+script = ExtResource("3_qjpl8")
+variable = &"target"
+
+[sub_resource type="BehaviorTree" id="BehaviorTree_mu7pl"]
+blackboard_plan = SubResource("BlackboardPlan_qlppl")
+root_task = SubResource("BTDecorator_bijdr")
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_aspu6"]
+
+[node name="EnemyBT" type="CharacterBody2D"]
+script = ExtResource("1_834aw")
+max_speed = 50
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Body"]
+position = Vector2(0, -10.000001)
+scale = Vector2(0.1, 0.2)
+texture = ExtResource("1_qlppl")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Body/Sprite2D"]
+position = Vector2(79.99999, -22.321045)
+scale = Vector2(0.91694, 0.27064142)
+texture = ExtResource("1_qlppl")
+
+[node name="Sprite2D3" type="Sprite2D" parent="Body/Sprite2D"]
+show_behind_parent = true
+position = Vector2(-70, -7.4105206)
+scale = Vector2(0.61472017, 0.4282895)
+texture = ExtResource("1_qlppl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_834aw")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+target_desired_distance = 15.0
+avoidance_enabled = true
+debug_enabled = true
+
+[node name="UpdateTargetTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_qjpl8")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_vahtq")
+}
+
+[node name="BTPlayer" type="BTPlayer" parent="."]
+behavior_tree = SubResource("BehaviorTree_mu7pl")
+blackboard_plan = SubResource("BlackboardPlan_aspu6")
