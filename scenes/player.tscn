@@ -1,8 +1,9 @@
-[gd_scene load_steps=28 format=3 uid="uid://df84bjfdlp4lx"]
+[gd_scene load_steps=29 format=3 uid="uid://df84bjfdlp4lx"]
 
 [ext_resource type="Script" uid="uid://c3g0gk37yr2r2" path="res://scenes/player.gd" id="2_g2els"]
 [ext_resource type="PackedScene" uid="uid://c8ddyqqaq6lm" path="res://scenes/bullet.tscn" id="2_smehm"]
 [ext_resource type="PackedScene" uid="uid://biw121ov2y2lk" path="res://scenes/input_synchronizer.tscn" id="3_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://dvagapapkdi41" path="res://assets/Hana Caraka - Farming n Foraging [sample]/crops/potato.png" id="4_3v2ag"]
 [ext_resource type="Texture2D" uid="uid://q1xulce7ql2k" path="res://assets/Hana Caraka - Base Character [sample]/idle.png" id="5_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://dfv5por2ictjt" path="res://assets/Hana Caraka - Base Character [sample]/run.png" id="5_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://b6lqxpogdeq8e" path="res://assets/Hana Caraka - Base Character [sample]/death.png" id="6_fjrip"]
@@ -316,6 +317,14 @@ offset = Vector2(0, -6)
 hframes = 4
 vframes = 3
 
+[node name="VoteSprite" type="Sprite2D" parent="."]
+visible = false
+z_index = 1
+position = Vector2(1, -14)
+texture = ExtResource("4_3v2ag")
+region_enabled = true
+region_rect = Rect2(16, 16, 16, 16)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_g2els")
@@ -344,7 +353,7 @@ script = ExtResource("8_smehm")
 health_component = NodePath("../HealthComponent")
 metadata/_custom_type_script = "uid://6yht3jk70p8w"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+[node name="HurtboxCollisionShape" type="CollisionShape2D" parent="Hurtbox"]
 position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_smehm")
 

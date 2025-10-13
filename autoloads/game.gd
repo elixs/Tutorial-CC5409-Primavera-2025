@@ -2,7 +2,7 @@ extends Node
 
 signal players_updated
 signal player_updated(id)
-signal vote_updated(id)
+signal vote_updated(id, vote)
 
 @export var multiplayer_test = false
 @export var use_roles = true
@@ -117,7 +117,7 @@ func set_player_vote(id: int, vote: bool) -> void:
 		return
 	player.vote = vote
 	player_updated.emit(id)
-	vote_updated.emit(id)
+	vote_updated.emit(id, vote)
 
 
 func set_current_player_vote(vote: bool) -> void:
@@ -127,6 +127,13 @@ func set_current_player_vote(vote: bool) -> void:
 func reset_votes() -> void:
 	for player in players:
 		set_player_vote.rpc(player.id, false)
+
+
+func has_all_voted() -> bool:
+	var all_voted = true
+	for player in Game.players:
+		all_voted = all_voted and player.vote
+	return all_voted
 
 
 func is_online() -> bool:

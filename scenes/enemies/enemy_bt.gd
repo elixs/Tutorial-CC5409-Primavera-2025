@@ -1,4 +1,7 @@
+class_name EnemyBT
 extends CharacterBody2D
+
+signal died()
 
 @export var max_speed = 100
 
@@ -7,12 +10,15 @@ var _movement_enabled = false
 @onready var bt_player: BTPlayer = $BTPlayer
 @onready var navigation_agent_2d: NavigationAgent2D = $NavigationAgent2D
 @onready var update_target_timer: Timer = $UpdateTargetTimer
+@onready var health_component: HealthComponent = $HealthComponent
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 
 func _ready() -> void:
 	bt_player.active = is_multiplayer_authority()
 	update_target_timer.timeout.connect(_update_target)
 	_update_target()
+	health_component.died.connect(_on_died)
 
 
 func _physics_process(_delta: float) -> void:
@@ -64,3 +70,14 @@ func get_closest_player() -> Player:
 			closest_player = player_data.scene
 			closest_distance = player_distance
 	return closest_player
+
+
+func _on_died():
+	Debug.log("died")
+	died.emit()
+	queue_free()
+
+
+@rpc("any_peer", "call_local", "reliable")
+func play_animation(animation: String):
+	animation_player.play(animation)

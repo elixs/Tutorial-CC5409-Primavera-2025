@@ -5,6 +5,8 @@ extends CharacterBody2D
 @export var acceleration: int = 400
 @export var bullet_scene: PackedScene
 
+var _respawn_position: Vector2
+
 
 @onready var label: Label = $Label
 @onready var multiplayer_synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
@@ -20,6 +22,10 @@ extends CharacterBody2D
 @onready var hud: HUD = $HUD
 @onready var health_bar: ProgressBar = %HealthBar
 @onready var melee_cooldown: Timer = $MeleeCooldown
+@onready var vote_sprite: Sprite2D = $VoteSprite
+@onready var sprite_2d: Sprite2D = $Sprite2D
+@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+@onready var hurtbox_collision_shape: CollisionShape2D = $Hurtbox/HurtboxCollisionShape
 
 
 var picked_node = null
@@ -35,6 +41,10 @@ func _ready() -> void:
 	health_bar.value = health_component.health
 	health_bar.max_value = health_component.max_health
 	health_component.health_changed.connect(func(value): health_bar.value = value)
+	health_component.died.connect(_on_died)
+	Game.vote_updated.connect(_on_vote_updated)
+	vote_sprite.hide()
+
 
 func _physics_process(delta: float) -> void:
 
@@ -42,7 +52,7 @@ func _physics_process(delta: float) -> void:
 	velocity = velocity.move_toward(move_input * max_speed, acceleration * delta)
 	move_and_slide()
 	
-	if is_multiplayer_authority():
+	if is_multiplayer_authority() and not is_dead():
 		if Input.is_action_just_pressed("range") and not animation_tree["parameters/range/active"]:
 			fire_server.rpc_id(1, get_global_mouse_position())
 		if Input.is_action_just_pressed("melee") and melee_cooldown.is_stopped():
@@ -147,3 +157,31 @@ func heal(value: int) -> void:
 	if not multiplayer.is_server():
 		return
 	health_component.health += value
+
+
+func _on_vote_updated(id: int, vote: bool) -> void:
+	if get_multiplayer_authority() == id:
+		vote_sprite.visible = vote
+
+
+func _on_died() -> void:
+	sprite_2d.modulate = Color(1, 1, 1, 0.25)
+	collision_shape_2d.set_deferred("disabled", true)
+	hurtbox_collision_shape.set_deferred("disabled", true)
+	_respawn_position = global_position
+
+
+func is_dead():
+	return health_component.health == 0
+
+
+@rpc("any_peer", "call_local", "reliable")
+func respawn():
+	if not is_dead():
+		return
+	sprite_2d.modulate = Color.WHITE
+	collision_shape_2d.set_deferred("disabled", false)
+	hurtbox_collision_shape.set_deferred("disabled", false)
+	if is_multiplayer_authority():
+		global_position = _respawn_position
+		health_component.health = health_component.max_health

@@ -21,6 +21,7 @@ Debug="*res://autoloads/debug.gd"
 Game="*res://autoloads/game.tscn"
 AudioManager="*res://autoloads/audio_manager.gd"
 Lobby="*res://autoloads/lobby.tscn"
+LevelManager="*res://autoloads/level_manager.tscn"
 
 [display]
 
@@ -33,6 +34,7 @@ window/stretch/mode="canvas_items"
 [global_group]
 
 Pickable=""
+enemy=""
 
 [gui]
 

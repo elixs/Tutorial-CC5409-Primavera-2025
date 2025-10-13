@@ -1,10 +1,14 @@
-[gd_scene load_steps=25 format=3 uid="uid://wh0j0l2dsgtt"]
+[gd_scene load_steps=32 format=3 uid="uid://wh0j0l2dsgtt"]
 
 [ext_resource type="Script" uid="uid://t3vat2jlex3x" path="res://scenes/enemies/enemy_bt.gd" id="1_834aw"]
 [ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="1_qlppl"]
 [ext_resource type="Script" uid="uid://b5u70uj072ici" path="res://ai/tasks/abort_on_change.gd" id="3_qjpl8"]
 [ext_resource type="Script" uid="uid://ce52ptexcsymm" path="res://ai/tasks/in_range.gd" id="3_vahtq"]
+[ext_resource type="Script" uid="uid://dwi16rs2sqolr" path="res://ai/tasks/replicated_play_animation.gd" id="4_hr1l7"]
+[ext_resource type="Script" uid="uid://bhk2onep5t4od" path="res://ai/tasks/log.gd" id="4_mu7pl"]
 [ext_resource type="Script" uid="uid://bwonka5vkbwni" path="res://ai/tasks/move_to.gd" id="4_wmy3e"]
+[ext_resource type="Script" uid="uid://6yht3jk70p8w" path="res://components/hurtbox.gd" id="6_atyoi"]
+[ext_resource type="PackedScene" uid="uid://sqqc1otkijsx" path="res://components/health_component.tscn" id="7_atyoi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_834aw"]
 radius = 5.0
@@ -88,30 +92,38 @@ _data = {
 [sub_resource type="BTCondition" id="BTCondition_wmy3e"]
 script = ExtResource("3_vahtq")
 
-[sub_resource type="BBNode" id="BBNode_vahtq"]
+[sub_resource type="BTConsolePrint" id="BTConsolePrint_aspu6"]
+text = "hola"
+script = ExtResource("4_mu7pl")
+
+[sub_resource type="BBNode" id="BBNode_hr1l7"]
 saved_value = NodePath("AnimationPlayer")
 resource_name = "AnimationPlayer"
 
-[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_wmy3e"]
-animation_player = SubResource("BBNode_vahtq")
+[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_mu7pl"]
+animation_player = SubResource("BBNode_hr1l7")
 animation_name = &"wink"
+script = ExtResource("4_hr1l7")
+
+[sub_resource type="BTWait" id="BTWait_mu7pl"]
 
 [sub_resource type="BTSequence" id="BTSequence_vahtq"]
-children = [SubResource("BTCondition_wmy3e"), SubResource("BTPlayAnimation_wmy3e")]
+children = [SubResource("BTCondition_wmy3e"), SubResource("BTConsolePrint_aspu6"), SubResource("BTPlayAnimation_mu7pl"), SubResource("BTWait_mu7pl")]
 
-[sub_resource type="BBNode" id="BBNode_bijdr"]
+[sub_resource type="BBNode" id="BBNode_mu7pl"]
 saved_value = NodePath("AnimationPlayer")
 resource_name = "AnimationPlayer"
 
-[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_atyoi"]
-animation_player = SubResource("BBNode_bijdr")
+[sub_resource type="BTPlayAnimation" id="BTPlayAnimation_aspu6"]
+animation_player = SubResource("BBNode_mu7pl")
 animation_name = &"walk"
+script = ExtResource("4_hr1l7")
 
 [sub_resource type="BTAction" id="BTAction_bijdr"]
 script = ExtResource("4_wmy3e")
 
 [sub_resource type="BTSequence" id="BTSequence_hr1l7"]
-children = [SubResource("BTPlayAnimation_atyoi"), SubResource("BTAction_bijdr")]
+children = [SubResource("BTPlayAnimation_aspu6"), SubResource("BTAction_bijdr")]
 
 [sub_resource type="BTSelector" id="BTSelector_wmy3e"]
 children = [SubResource("BTSequence_vahtq"), SubResource("BTSequence_hr1l7")]
@@ -127,7 +139,10 @@ root_task = SubResource("BTDecorator_bijdr")
 
 [sub_resource type="BlackboardPlan" id="BlackboardPlan_aspu6"]
 
-[node name="EnemyBT" type="CharacterBody2D"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mu7pl"]
+radius = 7.0
+
+[node name="EnemyBT" type="CharacterBody2D" groups=["enemy"]]
 script = ExtResource("1_834aw")
 max_speed = 50
 
@@ -171,3 +186,16 @@ libraries = {
 [node name="BTPlayer" type="BTPlayer" parent="."]
 behavior_tree = SubResource("BehaviorTree_mu7pl")
 blackboard_plan = SubResource("BlackboardPlan_aspu6")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("6_atyoi")
+health_component = NodePath("../HealthComponent")
+metadata/_custom_type_script = "uid://6yht3jk70p8w"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -10)
+shape = SubResource("CapsuleShape2D_mu7pl")
+
+[node name="HealthComponent" parent="." instance=ExtResource("7_atyoi")]

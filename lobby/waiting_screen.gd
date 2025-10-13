@@ -24,7 +24,7 @@ func _ready() -> void:
 	ready_button.pressed.connect(_toggle_ready)
 	Game.players_updated.connect(_handle_players_updated)
 	Game.player_updated.connect(func(_id): _update_ready_button())
-	Game.vote_updated.connect(func(_id): _handle_vote_updated())
+	Game.vote_updated.connect(func(_id, _vote): _handle_vote_updated())
 	if multiplayer.is_server():
 		start_timer.timeout.connect(func(): _start_game.rpc())
 	_handle_players_updated()

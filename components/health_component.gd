@@ -2,11 +2,14 @@ class_name HealthComponent
 extends MultiplayerSynchronizer
 
 signal health_changed(value)
+signal died()
 
 @export var health = 100:
 	set(value):
-		health = value
+		health = clamp(value, 0, max_health)
 		health_changed.emit(health)
+		if health == 0:
+			died.emit()
 @export var max_health  = 100
 
 
