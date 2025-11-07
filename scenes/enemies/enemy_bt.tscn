@@ -1,11 +1,10 @@
-[gd_scene load_steps=32 format=3 uid="uid://wh0j0l2dsgtt"]
+[gd_scene load_steps=30 format=3 uid="uid://wh0j0l2dsgtt"]
 
 [ext_resource type="Script" uid="uid://t3vat2jlex3x" path="res://scenes/enemies/enemy_bt.gd" id="1_834aw"]
 [ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="1_qlppl"]
 [ext_resource type="Script" uid="uid://b5u70uj072ici" path="res://ai/tasks/abort_on_change.gd" id="3_qjpl8"]
 [ext_resource type="Script" uid="uid://ce52ptexcsymm" path="res://ai/tasks/in_range.gd" id="3_vahtq"]
 [ext_resource type="Script" uid="uid://dwi16rs2sqolr" path="res://ai/tasks/replicated_play_animation.gd" id="4_hr1l7"]
-[ext_resource type="Script" uid="uid://bhk2onep5t4od" path="res://ai/tasks/log.gd" id="4_mu7pl"]
 [ext_resource type="Script" uid="uid://bwonka5vkbwni" path="res://ai/tasks/move_to.gd" id="4_wmy3e"]
 [ext_resource type="Script" uid="uid://6yht3jk70p8w" path="res://components/hurtbox.gd" id="6_atyoi"]
 [ext_resource type="PackedScene" uid="uid://sqqc1otkijsx" path="res://components/health_component.tscn" id="7_atyoi"]
@@ -92,10 +91,6 @@ _data = {
 [sub_resource type="BTCondition" id="BTCondition_wmy3e"]
 script = ExtResource("3_vahtq")
 
-[sub_resource type="BTConsolePrint" id="BTConsolePrint_aspu6"]
-text = "hola"
-script = ExtResource("4_mu7pl")
-
 [sub_resource type="BBNode" id="BBNode_hr1l7"]
 saved_value = NodePath("AnimationPlayer")
 resource_name = "AnimationPlayer"
@@ -108,7 +103,7 @@ script = ExtResource("4_hr1l7")
 [sub_resource type="BTWait" id="BTWait_mu7pl"]
 
 [sub_resource type="BTSequence" id="BTSequence_vahtq"]
-children = [SubResource("BTCondition_wmy3e"), SubResource("BTConsolePrint_aspu6"), SubResource("BTPlayAnimation_mu7pl"), SubResource("BTWait_mu7pl")]
+children = [SubResource("BTCondition_wmy3e"), SubResource("BTPlayAnimation_mu7pl"), SubResource("BTWait_mu7pl")]
 
 [sub_resource type="BBNode" id="BBNode_mu7pl"]
 saved_value = NodePath("AnimationPlayer")

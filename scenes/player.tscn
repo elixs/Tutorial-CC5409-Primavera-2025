@@ -361,7 +361,7 @@ shape = SubResource("CircleShape2D_smehm")
 spawn_path = NodePath(".")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
+zoom = Vector2(0.3, 0.3)
 
 [node name="PickableArea2D" type="Area2D" parent="."]
 position = Vector2(23, 0)
