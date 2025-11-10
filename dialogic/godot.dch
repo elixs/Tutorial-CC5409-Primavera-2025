@@ -1,0 +1,94 @@
+{
+"@path": "res://addons/dialogic/Resources/character.gd",
+"@subpath": NodePath(""),
+&"_translation_id": "",
+&"color": Color(1, 1, 1, 1),
+&"custom_info": {
+"prefix": "",
+"sound_mood_default": "",
+"sound_moods": {},
+"style": "",
+"suffix": ""
+},
+&"default_portrait": "",
+&"description": "",
+&"display_name": "godot",
+&"mirror": false,
+&"nicknames": [""],
+&"offset": Vector2(0, 0),
+&"portraits": {
+"": {
+"export_overrides": {
+"image": "\"res://icon.svg\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"carrot": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/carrot.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"crops - all": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/crops - all.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"onion": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/onion.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"potato": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/potato.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"radish": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/radish.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"spinach": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/spinach.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+},
+"turnip": {
+"export_overrides": {
+"image": "\"res://assets/Hana Caraka - Farming n Foraging [sample]/crops/turnip.png\""
+},
+"mirror": false,
+"offset": Vector2(0, 0),
+"scale": 1,
+"scene": ""
+}
+},
+&"scale": 1.0
+}

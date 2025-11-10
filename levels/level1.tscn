@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://bynpuqoa146rn"]
+[gd_scene load_steps=17 format=4 uid="uid://bynpuqoa146rn"]
 
 [ext_resource type="Script" uid="uid://ce5q7gi2blwnf" path="res://levels/level1.gd" id="1_yydhl"]
 [ext_resource type="PackedScene" uid="uid://df84bjfdlp4lx" path="res://scenes/player.tscn" id="2_3w4mx"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://kuw0itnv12c3" path="res://scenes/goal.tscn" id="11_yydhl"]
 [ext_resource type="PackedScene" uid="uid://wh0j0l2dsgtt" path="res://scenes/enemies/enemy_bt.tscn" id="12_3umqw"]
 [ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="13_8bcou"]
+[ext_resource type="PackedScene" uid="uid://d34f660p4g6uq" path="res://scenes/piano.tscn" id="15_jq2cn"]
 [ext_resource type="PackedScene" uid="uid://c66fl8u5udhcf" path="res://ui/pause_menu.tscn" id="17_6lx4c"]
 [ext_resource type="AudioStream" uid="uid://2pro20eg54v0" path="res://assets/music/spooky_pookie.mp3" id="18_6xmqk"]
 
@@ -52,6 +53,9 @@ passengers = [NodePath("../Icon")]
 
 [node name="Goal" parent="." instance=ExtResource("11_yydhl")]
 position = Vector2(131, 102)
+
+[node name="Piano" parent="." instance=ExtResource("15_jq2cn")]
+position = Vector2(-140, -372)
 
 [node name="YSortable" type="Node2D" parent="."]
 y_sort_enabled = true
@@ -101,3 +105,53 @@ bus = &"Music"
 position = Vector2(42, -433)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("13_8bcou")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(200, 150)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Joke" type="Label" parent="CanvasLayer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "joke"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Window" type="Window" parent="."]
+oversampling_override = 1.0
+position = Vector2i(100, 100)
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Window"]
+position = Vector2(82, 95)
+texture = ExtResource("13_8bcou")
+
+[node name="QuitButton" type="Button" parent="Window"]
+unique_name_in_owner = true
+offset_left = 57.0
+offset_top = 66.0
+offset_right = 91.0
+offset_bottom = 91.0
+text = "quit"
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+oversampling_override = 1.0
+initial_position = 1
+dialog_text = "are you sure about that?"
