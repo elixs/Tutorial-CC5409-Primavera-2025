@@ -1,17 +1,21 @@
-[gd_scene load_steps=29 format=3 uid="uid://df84bjfdlp4lx"]
+[gd_scene load_steps=33 format=3 uid="uid://df84bjfdlp4lx"]
 
 [ext_resource type="Script" uid="uid://c3g0gk37yr2r2" path="res://scenes/player.gd" id="2_g2els"]
 [ext_resource type="PackedScene" uid="uid://c8ddyqqaq6lm" path="res://scenes/bullet.tscn" id="2_smehm"]
 [ext_resource type="PackedScene" uid="uid://biw121ov2y2lk" path="res://scenes/input_synchronizer.tscn" id="3_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://dvagapapkdi41" path="res://assets/Hana Caraka - Farming n Foraging [sample]/crops/potato.png" id="4_3v2ag"]
+[ext_resource type="Texture2D" uid="uid://048eggql8guy" path="res://assets/sprites/top_hat.png" id="4_a8ls1"]
 [ext_resource type="Texture2D" uid="uid://q1xulce7ql2k" path="res://assets/Hana Caraka - Base Character [sample]/idle.png" id="5_qlg0r"]
 [ext_resource type="Texture2D" uid="uid://dfv5por2ictjt" path="res://assets/Hana Caraka - Base Character [sample]/run.png" id="5_tuyoq"]
 [ext_resource type="Texture2D" uid="uid://b6lqxpogdeq8e" path="res://assets/Hana Caraka - Base Character [sample]/death.png" id="6_fjrip"]
 [ext_resource type="AnimationNodeStateMachine" uid="uid://b21vc551xwe86" path="res://resources/movement.tres" id="7_smehm"]
+[ext_resource type="AudioStream" uid="uid://bennu7m053fkd" path="res://assets/sounds/sand-step.mp3" id="8_f1ej7"]
 [ext_resource type="Script" uid="uid://6yht3jk70p8w" path="res://components/hurtbox.gd" id="8_smehm"]
+[ext_resource type="Script" uid="uid://dnrl22ngdyynk" path="res://scripts/camera_with_shake_2d.gd" id="10_jej6c"]
 [ext_resource type="PackedScene" uid="uid://cjv1bekmdpf7j" path="res://ui/hud.tscn" id="10_y4r1p"]
 [ext_resource type="Texture2D" uid="uid://tw8t38ns0seh" path="res://icon.svg" id="11_3v2ag"]
 [ext_resource type="PackedScene" uid="uid://sqqc1otkijsx" path="res://components/health_component.tscn" id="11_d2wvv"]
+[ext_resource type="Texture2D" uid="uid://dbm5ju6fdq2gy" path="res://assets/sprites/fedora.png" id="15_oprun"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2wvv"]
 bg_color = Color(0, 0, 0, 1)
@@ -243,11 +247,30 @@ tracks/3/path = NodePath("Sprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"times": PackedFloat32Array(0, 0.1, 0.20000002, 0.3, 0.4, 0.5, 0.59999996, 0.7),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7]
+"values": [1, 2, 3, 4, 5, 6, 7, 0]
 }
+tracks/4/type = "audio"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AudioStreamPlayer2D")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("8_f1ej7")
+}, {
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("8_f1ej7")
+}],
+"times": PackedFloat32Array(0.1, 0.5)
+}
+tracks/4/use_blend = true
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tuyoq"]
 _data = {
@@ -285,6 +308,8 @@ collision_layer = 3
 motion_mode = 1
 script = ExtResource("2_g2els")
 bullet_scene = ExtResource("2_smehm")
+fedora_texture = ExtResource("15_oprun")
+top_hat_texture = ExtResource("4_a8ls1")
 metadata/_edit_lock_ = true
 
 [node name="HealthBar" type="ProgressBar" parent="."]
@@ -292,9 +317,9 @@ unique_name_in_owner = true
 z_index = 1
 custom_minimum_size = Vector2(60, 10)
 offset_left = -30.0
-offset_top = -39.0
+offset_top = -60.0
 offset_right = 30.0
-offset_bottom = -29.0
+offset_bottom = -50.0
 size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_d2wvv")
 theme_override_styles/fill = SubResource("StyleBoxFlat_3v2ag")
@@ -303,9 +328,9 @@ show_percentage = false
 [node name="Label" type="Label" parent="."]
 z_index = 1
 offset_left = -173.0
-offset_top = -65.0
+offset_top = -86.0
 offset_right = 175.0
-offset_bottom = -37.0
+offset_bottom = -58.0
 text = "asdads"
 label_settings = SubResource("LabelSettings_smehm")
 horizontal_alignment = 1
@@ -347,6 +372,7 @@ parameters/range/internal_active = false
 parameters/range/request = 0
 
 [node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health_component")]
+visible = false
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("8_smehm")
@@ -360,13 +386,14 @@ shape = SubResource("CircleShape2D_smehm")
 [node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath(".")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.3, 0.3)
+[node name="CameraWithShake2D" type="Camera2D" parent="."]
+script = ExtResource("10_jej6c")
 
 [node name="PickableArea2D" type="Area2D" parent="."]
 position = Vector2(23, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickableArea2D"]
+visible = false
 shape = SubResource("CircleShape2D_ur7pv")
 
 [node name="PickableMarker2D" type="Marker2D" parent="."]
@@ -383,5 +410,14 @@ wait_time = 2.0
 one_shot = true
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
+visible = false
 scale = Vector2(0.07335468, 0.07335468)
 texture = ExtResource("11_3v2ag")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+bus = &"Footsteps"
+
+[node name="Hat" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("15_oprun")
+offset = Vector2(0, -30)

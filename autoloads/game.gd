@@ -111,6 +111,15 @@ func set_current_player_role(role: Statics.Role) -> void:
 
 
 @rpc("any_peer", "reliable", "call_local")
+func set_player_hat(id: int, hat: String) -> void:
+	var player = get_player(id)
+	player.hat = hat
+
+
+func set_current_player_hat(hat: String) -> void:
+	set_player_hat.rpc(multiplayer.get_unique_id(), hat)
+
+@rpc("any_peer", "reliable", "call_local")
 func set_player_vote(id: int, vote: bool) -> void:
 	var player = get_player(id)
 	if not player:

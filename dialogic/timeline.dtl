@@ -1,5 +1,11 @@
-join godot center [animation="Bounce In"]
-godot: Whats up!
-godot: asdghdfjhgjhkj.klghkfgjf
-- tangananica
-- tanganana
+godot: Hi, welcome to my place
+godot: This magical place has a lot to offer
+godot: What type of hat do you like?
+- Fedora
+	godot: Oh wow, so original
+	[signal arg="fedora"]
+- Top Hat
+	[signal arg="top_hat"]
+	godot:  I see, a man of culture
+godot: That's awesome
+godot: Enjoy your visit

@@ -3,14 +3,11 @@ extends Node2D
 @export var player_scene: PackedScene
 @export var knight_scene: PackedScene
 
-
 @onready var players: Node2D = %Players
 @onready var markers: Node2D = %Markers
 
 
 func _ready() -> void:
-	start_dialogue()
-	
 	if not player_scene or not knight_scene:
 		return
 	
@@ -25,8 +22,3 @@ func _ready() -> void:
 		player_inst.global_position = markers.get_child(i).global_position
 		player_inst.setup(player_data)
 		player_data.scene = player_inst
-	
-
-func start_dialogue() -> void:
-	await get_tree().create_timer(1).timeout
-	Dialogic.start("timeline")

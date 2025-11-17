@@ -4,6 +4,9 @@ extends CharacterBody2D
 @export var max_speed: int = 100
 @export var acceleration: int = 400
 @export var bullet_scene: PackedScene
+@export var fedora_texture: Texture2D
+@export var top_hat_texture: Texture2D
+
 
 var _respawn_position: Vector2
 
@@ -15,7 +18,6 @@ var _respawn_position: Vector2
 @onready var playback: AnimationNodeStateMachinePlayback = animation_tree["parameters/movement/playback"]
 @onready var bullet_spawner: MultiplayerSpawner = $BulletSpawner
 @onready var weapon_pivot: Node2D = $WeaponPivot
-@onready var camera_2d: Camera2D = $Camera2D
 @onready var pickable_area_2d: Area2D = $PickableArea2D
 @onready var pickable_marker_2d: Marker2D = $PickableMarker2D
 @onready var health_component: HealthComponent = $HealthComponent
@@ -26,6 +28,9 @@ var _respawn_position: Vector2
 @onready var sprite_2d: Sprite2D = $Sprite2D
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var hurtbox_collision_shape: CollisionShape2D = $Hurtbox/HurtboxCollisionShape
+@onready var camera_with_shake_2d: CameraWithShake2D = $CameraWithShake2D
+@onready var hurtbox: Hurtbox = $Hurtbox
+@onready var hat: Sprite2D = $Hat
 
 
 var picked_node = null
@@ -33,7 +38,6 @@ var pickable: Node2D
 
 
 func _ready() -> void:
-	
 	if bullet_scene:
 		bullet_spawner.add_spawnable_scene(bullet_scene.resource_path)
 	
@@ -44,8 +48,9 @@ func _ready() -> void:
 	health_component.died.connect(_on_died)
 	Game.vote_updated.connect(_on_vote_updated)
 	vote_sprite.hide()
-
-
+	hurtbox.damage_recieved.connect(func() -> void: camera_with_shake_2d.shake(6, 0.1))
+	
+	
 func _physics_process(delta: float) -> void:
 
 	var move_input = input_synchronizer.move_input
@@ -83,13 +88,18 @@ func setup(player_data: Statics.PlayerData):
 	set_multiplayer_authority(player_data.id, false)
 	multiplayer_synchronizer.set_multiplayer_authority(player_data.id, false)
 	input_synchronizer.set_multiplayer_authority(player_data.id, false)
-	camera_2d.enabled = is_multiplayer_authority()
+	camera_with_shake_2d.enabled = is_multiplayer_authority()
 	hud.visible = is_multiplayer_authority()
 	if is_multiplayer_authority():
 		pickable_area_2d.body_entered.connect(_on_pickable_body_entered)
 		pickable_area_2d.body_exited.connect(_on_pickable_body_exited)
+		Dialogic.signal_event.connect(_on_dialogic_signal)
 	health_bar.visible = not is_multiplayer_authority()
 	health_component.set_multiplayer_authority(player_data.id)
+	label.visible = not is_multiplayer_authority()
+	
+	if player_data.hat:
+		show_hat(player_data.hat)
 
 @rpc("any_peer", "call_local", "reliable")
 func test():
@@ -185,3 +195,28 @@ func respawn():
 	if is_multiplayer_authority():
 		global_position = _respawn_position
 		health_component.health = health_component.max_health
+
+
+func _on_dialogic_signal(argument: String):
+	Debug.log(argument)
+	set_hat.rpc(argument)
+
+@rpc("call_local", "reliable")
+func set_hat(value: String) -> void:
+	if value == "fedora":
+		hat.texture = fedora_texture
+		hat.show()
+		Game.set_player_hat(multiplayer.get_remote_sender_id(), value)
+	elif value == "top_hat":
+		hat.texture = top_hat_texture
+		hat.show()
+		Game.set_player_hat(multiplayer.get_remote_sender_id(), value)
+
+
+func show_hat(value: String) -> void:
+	if value == "fedora":
+		hat.texture = fedora_texture
+		hat.show()
+	elif value == "top_hat":
+		hat.texture = top_hat_texture
+		hat.show()
